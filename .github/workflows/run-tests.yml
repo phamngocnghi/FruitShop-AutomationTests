@@ -1,0 +1,61 @@
+name: Run E2E Automation Tests
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * *' # Tự động chạy test vào 12h đêm mỗi ngày (nếu muốn)
+  workflow_dispatch: # Cho phép bạn bấm nút chạy test thủ công bất kỳ lúc nào
+
+permissions:
+  contents: write
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x' # Hoặc phiên bản .NET bộ test của bạn đang dùng
+
+    - name: Restore dependencies
+      run: dotnet restore AutomationFramework/AutomationFramework.csproj
+
+    - name: Run Selenium Tests (NUnit)
+      run: dotnet test AutomationFramework/AutomationFramework.csproj --configuration Release
+      continue-on-error: true
+
+    - name: Collect Allure Results
+      if: always()
+      run: |
+        mkdir -p allure-results
+        find . -type d -name "allure-results" -exec cp -r {}/. allure-results/ \;
+
+    - name: Get Allure History
+      uses: actions/checkout@v4
+      if: always()
+      with:
+        ref: gh-pages
+        path: gh-pages-dir
+
+    - name: Generate Allure Report
+      uses: simple-elf/allure-report-action@master
+      if: always()
+      with:
+        allure_results: allure-results
+        allure_history: allure-history
+        keep_reports: 20
+
+    - name: Deploy Allure Report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      if: always()
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: allure-history
+        publish_branch: gh-pages
