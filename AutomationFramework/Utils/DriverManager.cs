@@ -31,8 +31,21 @@ namespace AutomationFramework.Utils
             options.AddArgument("--allow-insecure-localhost");
             // --------------------------------------------------
 
-            // Bỏ comment dòng dưới nếu muốn chạy không giao diện (headless) trên CI/CD
-            // options.AddArgument("--headless");
+            // --- TỰ ĐỘNG CHUYỂN CHẾ ĐỘ KHI CHẠY TRÊN CI/CD (GITHUB ACTIONS) ---
+            // Phát hiện biến môi trường "GITHUB_ACTIONS" do GitHub tự sinh ra
+            bool isCiEnvironment = Environment.GetEnvironmentVariable("GITHUB_ACTIONS") == "true";
+            if (isCiEnvironment)
+            {
+                options.AddArgument("--headless=new"); // Sử dụng engine headless mới của Chrome
+                options.AddArgument("--no-sandbox"); // Vượt qua cơ chế sandbox bảo mật của Linux
+                options.AddArgument("--disable-dev-shm-usage"); // Tránh lỗi tràn bộ nhớ dùng chung /dev/shm
+                options.AddArgument("--window-size=1920,1080"); // Đặt kích thước màn hình chuẩn để không bị vỡ giao diện
+
+                // --- CẤU HÌNH QUAN TRỌNG: CHẶN TẢI ẢNH ĐỂ TIẾT KIỆM BĂNG THÔNG AZURE ---
+                // Chặn toàn bộ hình ảnh (.jpg, .png, .webp, v.v.) tải về máy ảo GitHub để tiết kiệm băng thông Azure
+                options.AddUserProfilePreference("profile.default_content_settings.images", 2);
+            }
+            // ------------------------------------------------------------------
 
             _driver.Value = new ChromeDriver(options);
         }
