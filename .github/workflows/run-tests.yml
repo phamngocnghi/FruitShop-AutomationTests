@@ -7,6 +7,11 @@ on:
   schedule:
     - cron: '0 0 * * *' # Tự động chạy test vào 12h đêm mỗi ngày (nếu muốn)
   workflow_dispatch: # Cho phép bạn bấm nút chạy test thủ công bất kỳ lúc nào
+  
+  # --- BỔ SUNG: CỔNG LẮNG NGHE TÍN HIỆU TỪ REPO WEBSITE ---
+  repository_dispatch:
+    types: [trigger-tests] # Tên sự kiện phải trùng khớp với event_type gửi đi từ curl
+  # --------------------------------------------------------
 
 permissions:
   contents: write
@@ -22,7 +27,7 @@ jobs:
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x' # Hoặc phiên bản .NET bộ test của bạn đang dùng
+        dotnet-version: '10.0.x' # Hoặc phiên bản .NET bộ test của bạn đang dùng
 
     - name: Restore dependencies
       run: dotnet restore AutomationFramework/AutomationFramework.csproj
