@@ -41,11 +41,14 @@ namespace AutomationFramework.Utils
                 options.AddArgument("--disable-dev-shm-usage"); // Tránh lỗi tràn bộ nhớ dùng chung /dev/shm
                 options.AddArgument("--window-size=1920,1080"); // Đặt kích thước màn hình chuẩn để không bị vỡ giao diện
 
-                // --- CẤU HÌNH QUAN TRỌNG: CHẶN TẢI ẢNH ĐỂ TIẾT KIỆM BĂNG THÔNG AZURE ---
-                // Chặn toàn bộ hình ảnh (.jpg, .png, .webp, v.v.) tải về máy ảo GitHub để tiết kiệm băng thông Azure
+                // --- CẤU HÌNH KHẮC PHỤC LỖI QUOTA (CHẶN TẢI ẢNH 2 LỚP CHO HEADLESS CHROME) ---
+                // Lớp 1: Ép buộc nhân Blink của Chrome tắt hiển thị ảnh (Cách này chạy cực tốt trên Headless)
+                options.AddArgument("--blink-settings=imagesEnabled=false");
+
+                // Lớp 2: Chặn tải ở tầng Profile cá nhân
                 options.AddUserProfilePreference("profile.default_content_settings.images", 2);
+                // -------------------------------------------------------------------------
             }
-            // ------------------------------------------------------------------
 
             _driver.Value = new ChromeDriver(options);
         }
