@@ -1,5 +1,0 @@
-"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"Test case: Verify user cannot login with invalid credentials","3173","TC002 - Verify Login with invalid credentials","AutomationFramework","2026-07-05","passed","2026-07-05","LoginTests","AutomationFramework.Tests","LoginTests","TestLoginWithInvalidCredentials"
-"Test case: Verify validation when username is empty","12897","TC003 - Verify Login with empty username","AutomationFramework","2026-07-05","passed","2026-07-05","LoginTests","AutomationFramework.Tests","LoginTests","TestLoginWithEmptyUsername"
-"Test case: Verify user can logout successfully","4424","TC006 - Verify Logout functionality","AutomationFramework","2026-07-05","passed","2026-07-05","LoginTests","AutomationFramework.Tests","LoginTests","TestLogout"
-"Test case: Verify user can login with valid username and password","3653","TC001 - Verify Login with valid credentials","AutomationFramework","2026-07-05","passed","2026-07-05","LoginTests","AutomationFramework.Tests","LoginTests","TestLoginWithValidCredentials"
